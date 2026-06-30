@@ -1,19 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { pujas } from '@/lib/pujas';
 
 export default function BookPage() {
-  const params = useSearchParams();
-  const selectedId = params.get('puja') || pujas[0].id;
+  const [selectedId, setSelectedId] = useState(pujas[0].id);
   const puja = useMemo(() => pujas.find((item) => item.id === selectedId) || pujas[0], [selectedId]);
   const [form, setForm] = useState({ name: '', gotra: '', phone: '', email: '', date: '', purpose: '' });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setSelectedId(params.get('puja') || pujas[0].id);
+  }, []);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 

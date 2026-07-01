@@ -23,29 +23,49 @@ try {
 }
 const auth = getAuth(app);
 
-const fallbackImages = {
-  mahakal: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=86',
-  kamakhya: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=86',
-  kedarnath: 'https://images.unsplash.com/photo-1626621331169-5f34be280ed9?auto=format&fit=crop&w=1200&q=86',
-  trimbakeshwar: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=86',
-  ram: 'https://images.unsplash.com/photo-1609766418204-94aae0ecf8e3?auto=format&fit=crop&w=1200&q=86',
-  kashi: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=86',
-  vaishno: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=86',
-  ganesh: 'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=1200&q=86',
-  vishnu: 'https://images.unsplash.com/photo-1577083753695-e010191bacb5?auto=format&fit=crop&w=1200&q=86',
-  navgraha: 'https://images.unsplash.com/photo-1624461084896-cc7d24a163fc?auto=format&fit=crop&w=1200&q=86',
-  gaya: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=86',
-  tirupati: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=86',
-  baglamukhi: 'https://images.unsplash.com/photo-1577083753695-e010191bacb5?auto=format&fit=crop&w=1200&q=86',
-  hanuman: 'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=1200&q=86',
-  mangal: 'https://images.unsplash.com/photo-1624461084896-cc7d24a163fc?auto=format&fit=crop&w=1200&q=86',
-  durga: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=86',
-  lakshmi: 'https://images.unsplash.com/photo-1577083753695-e010191bacb5?auto=format&fit=crop&w=1200&q=86',
-  somnath: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=86',
-  pushkar: 'https://images.unsplash.com/photo-1626621331169-5f34be280ed9?auto=format&fit=crop&w=1200&q=86',
-  krishna: 'https://images.unsplash.com/photo-1577083753695-e010191bacb5?auto=format&fit=crop&w=1200&q=86',
-  default: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=86',
-};
+const $ = (id) => document.getElementById(id);
+const safeText = (value) => String(value || '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+const validUrl = (value) => /^https:\/\//i.test(String(value || '').trim());
+const slug = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+function pujaArt(title, subtitle, colors) {
+  const [bg1, bg2, accent, deep] = colors;
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${bg1}"/><stop offset="1" stop-color="${bg2}"/></linearGradient>
+        <radialGradient id="r" cx="52%" cy="42%" r="55%"><stop stop-color="#fff5d6" stop-opacity=".95"/><stop offset=".55" stop-color="${accent}" stop-opacity=".34"/><stop offset="1" stop-color="${deep}" stop-opacity=".1"/></radialGradient>
+        <filter id="s"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#3a1206" flood-opacity=".35"/></filter>
+      </defs>
+      <rect width="1200" height="675" fill="url(#g)"/>
+      <circle cx="600" cy="338" r="282" fill="url(#r)"/>
+      <g opacity=".18" fill="none" stroke="#fff7d9" stroke-width="2">
+        <circle cx="600" cy="338" r="250"/><circle cx="600" cy="338" r="205"/><circle cx="600" cy="338" r="160"/>
+        ${Array.from({ length: 24 }, (_, i) => {
+          const angle = (Math.PI * 2 * i) / 24;
+          const x1 = 600 + Math.cos(angle) * 110;
+          const y1 = 338 + Math.sin(angle) * 110;
+          const x2 = 600 + Math.cos(angle) * 288;
+          const y2 = 338 + Math.sin(angle) * 288;
+          return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+        }).join('')}
+      </g>
+      <g filter="url(#s)">
+        <path d="M600 136c58 66 98 132 98 204 0 89-45 148-98 148s-98-59-98-148c0-72 40-138 98-204z" fill="#1f1009" opacity=".88"/>
+        <path d="M545 365c43 20 92 20 135 0" fill="none" stroke="#fff0ba" stroke-width="17" stroke-linecap="round"/>
+        <path d="M555 320c34 14 75 14 109 0" fill="none" stroke="#f6a21a" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="600" cy="292" r="24" fill="${accent}"/>
+        <path d="M410 487c92-42 288-42 380 0v43H410z" fill="#2b170c" opacity=".9"/>
+        <g fill="#ffb72f"><circle cx="454" cy="473" r="25"/><circle cx="515" cy="455" r="23"/><circle cx="684" cy="455" r="23"/><circle cx="746" cy="473" r="25"/></g>
+        <g fill="#fff0b8"><path d="M320 518c0-46 34-70 34-70s34 24 34 70z"/><rect x="299" y="518" width="110" height="22" rx="11"/><path d="M812 518c0-46 34-70 34-70s34 24 34 70z"/><rect x="791" y="518" width="110" height="22" rx="11"/></g>
+      </g>
+      <rect x="0" y="0" width="1200" height="675" fill="#170b04" opacity=".18"/>
+      <text x="70" y="92" fill="#fff7df" font-family="Georgia, serif" font-size="42" font-weight="700">Pujan Sutra</text>
+      <text x="70" y="570" fill="#fff7df" font-family="Georgia, serif" font-size="58" font-weight="700">${safeText(title)}</text>
+      <text x="72" y="622" fill="#ffd49a" font-family="Arial, sans-serif" font-size="28" font-weight="700">${safeText(subtitle)}</text>
+    </svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
 
 const fallbackPujas = [
   { id: '1', name: 'Mahakal Abhishek', temple: 'Mahakaleshwar Temple, Ujjain', price: 1499, category: 'Health', deity: 'Shiva', tag: 'Most Popular', duration: '90 mins', type: 'Vedic', description: 'Bhasma Aarti and Abhishek with Panchamrit done by temple pandits.' },
@@ -76,30 +96,42 @@ let activeFilter = 'all';
 let currentUser = null;
 let lastBookingDraft = null;
 
-const $ = (id) => document.getElementById(id);
-const safeText = (value) => String(value || '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
-const validUrl = (value) => /^https:\/\//i.test(String(value || '').trim());
-const slug = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+function artForPuja(puja = {}) {
+  const text = `${puja.name || ''} ${puja.temple || ''} ${puja.deity || ''} ${puja.category || ''}`.toLowerCase();
+  const palettes = {
+    shiva: ['#111827', '#334155', '#f97316', '#020617'],
+    durga: ['#7f1d1d', '#f97316', '#facc15', '#450a0a'],
+    ram: ['#7c2d12', '#f59e0b', '#fde68a', '#431407'],
+    ganesh: ['#7c2d12', '#fb923c', '#fde047', '#431407'],
+    vishnu: ['#1e3a8a', '#0369a1', '#facc15', '#082f49'],
+    hanuman: ['#991b1b', '#ea580c', '#fde047', '#450a0a'],
+    lakshmi: ['#831843', '#db2777', '#fde68a', '#500724'],
+    navgraha: ['#312e81', '#7c3aed', '#f59e0b', '#1e1b4b'],
+    krishna: ['#1e1b4b', '#4338ca', '#facc15', '#0f172a'],
+    brahma: ['#7c2d12', '#dc2626', '#fed7aa', '#431407'],
+  };
+  const key = text.includes('ganesh') || text.includes('siddhivinayak') ? 'ganesh'
+    : text.includes('hanuman') || text.includes('sundarkand') || text.includes('salassar') ? 'hanuman'
+    : text.includes('durga') || text.includes('kamakhya') || text.includes('vaishno') || text.includes('baglamukhi') || text.includes('vindhyachal') ? 'durga'
+    : text.includes('vishnu') || text.includes('satyanarayan') || text.includes('tirupati') || text.includes('gaya') ? 'vishnu'
+    : text.includes('krishna') || text.includes('iskcon') || text.includes('vrindavan') ? 'krishna'
+    : text.includes('lakshmi') || text.includes('laxmi') ? 'lakshmi'
+    : text.includes('navgraha') || text.includes('navagraha') || text.includes('grah') || text.includes('mangal') ? 'navgraha'
+    : text.includes('ram') || text.includes('ayodhya') ? 'ram'
+    : text.includes('brahma') || text.includes('pushkar') ? 'brahma'
+    : 'shiva';
+  return pujaArt(puja.name || 'Sacred Puja', puja.temple || 'Verified Temple', palettes[key]);
+}
 
-function fallbackImageFor(puja = {}) {
-  const searchable = `${puja.name || ''} ${puja.temple || ''} ${puja.deity || ''} ${puja.category || ''}`.toLowerCase();
-  const entries = [
-    ['mahakal', fallbackImages.mahakal], ['kamakhya', fallbackImages.kamakhya], ['kedarnath', fallbackImages.kedarnath], ['rudra', fallbackImages.kedarnath],
-    ['trimbakeshwar', fallbackImages.trimbakeshwar], ['kaal', fallbackImages.trimbakeshwar], ['ram', fallbackImages.ram], ['ayodhya', fallbackImages.ram],
-    ['kashi', fallbackImages.kashi], ['varanasi', fallbackImages.kashi], ['vaishno', fallbackImages.vaishno], ['ganesh', fallbackImages.ganesh],
-    ['siddhivinayak', fallbackImages.ganesh], ['satyanarayan', fallbackImages.vishnu], ['vishnu', fallbackImages.vishnu], ['krishna', fallbackImages.krishna],
-    ['iskcon', fallbackImages.krishna], ['navgraha', fallbackImages.navgraha], ['navagraha', fallbackImages.navgraha], ['grah', fallbackImages.navgraha],
-    ['gaya', fallbackImages.gaya], ['pitru', fallbackImages.gaya], ['tirupati', fallbackImages.tirupati], ['tirumala', fallbackImages.tirupati],
-    ['baglamukhi', fallbackImages.baglamukhi], ['hanuman', fallbackImages.hanuman], ['salassar', fallbackImages.hanuman], ['mangal', fallbackImages.mangal],
-    ['durga', fallbackImages.durga], ['vindhyachal', fallbackImages.durga], ['laxmi', fallbackImages.lakshmi], ['lakshmi', fallbackImages.lakshmi],
-    ['sundarkand', fallbackImages.hanuman], ['somnath', fallbackImages.somnath], ['pushkar', fallbackImages.pushkar], ['brahma', fallbackImages.pushkar],
-  ];
-  return entries.find(([keyword]) => searchable.includes(keyword))?.[1] || fallbackImages.default;
+function shouldPreferGeneratedArt(puja = {}) {
+  const text = `${puja.name || ''} ${puja.temple || ''} ${puja.deity || ''}`.toLowerCase();
+  return /krishna|ganesh|hanuman|durga|laxmi|lakshmi|vishnu|brahma|navgraha|navagraha|mangal|satyanarayan|sundarkand/.test(text);
 }
 
 function imageForPuja(puja) {
   const image = String(puja.imageUrl || puja.image || '').trim();
-  return validUrl(image) ? image : fallbackImageFor(puja);
+  if (shouldPreferGeneratedArt(puja)) return artForPuja(puja);
+  return validUrl(image) ? image : artForPuja(puja);
 }
 
 function normalizePuja(row) {
@@ -115,7 +147,7 @@ function normalizePuja(row) {
     tag: row.tag || row.type || 'Verified',
     description: row.description || 'Verified puja with sankalp, pandit coordination, and digital confirmation.',
   };
-  return { ...base, fallbackImageUrl: fallbackImageFor(base), imageUrl: imageForPuja(base) };
+  return { ...base, fallbackImageUrl: artForPuja(base), imageUrl: imageForPuja(base) };
 }
 
 function mergePujas(managedRows) {
@@ -177,7 +209,7 @@ function getVisiblePujas() {
 function renderPujas(items = getVisiblePujas()) {
   $('pujaGrid').innerHTML = items.length ? items.map((puja) => `
     <article class="card">
-      <img src="${safeText(imageForPuja(puja))}" alt="${safeText(puja.name)}" loading="lazy" onerror="this.onerror=null;this.src='${safeText(puja.fallbackImageUrl || fallbackImages.default)}';">
+      <img src="${safeText(imageForPuja(puja))}" alt="${safeText(puja.name)}" loading="lazy" onerror="this.onerror=null;this.src='${safeText(puja.fallbackImageUrl || artForPuja(puja))}';">
       <div class="cardBody">
         <div class="tagRow"><span>${safeText(puja.tag)}</span><strong>Rs ${Number(puja.price || 0).toLocaleString('en-IN')}</strong></div>
         <h3>${safeText(puja.name)}</h3>
@@ -202,7 +234,7 @@ function updateSelectedPuja() {
   $('selectedPujaTemple').textContent = selectedPuja.temple;
   $('selectedPujaPrice').textContent = `Rs ${Number(selectedPuja.price || 0).toLocaleString('en-IN')}`;
   $('selectedPujaImage').src = imageForPuja(selectedPuja);
-  $('selectedPujaImage').onerror = () => { $('selectedPujaImage').src = selectedPuja.fallbackImageUrl || fallbackImages.default; };
+  $('selectedPujaImage').onerror = () => { $('selectedPujaImage').src = selectedPuja.fallbackImageUrl || artForPuja(selectedPuja); };
 }
 
 function updateAuthUi(user) {

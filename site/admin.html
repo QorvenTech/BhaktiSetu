@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>BhaktiSetu Team Access</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./">BhaktiSetu</a>
+    <nav>
+      <a href="./">Public Site</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section twoCol" id="admin">
+      <form id="loginForm" class="panel form">
+        <p class="eyebrow">Secure dashboard</p>
+        <h2>Team Login</h2>
+        <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
+        <button class="primary" type="submit">Login</button>
+        <p id="loginMessage" class="message error"></p>
+      </form>
+
+      <div id="dashboard" class="panel hidden">
+        <div class="dashHead">
+          <div><p class="eyebrow">Admin dashboard</p><h2 id="roleLabel">Team dashboard</h2></div>
+          <button id="logoutBtn" class="secondary" type="button">Logout</button>
+        </div>
+        <div id="tabs" class="tabs"></div>
+        <div id="opsView" class="adminGrid"></div>
+        <div id="bookingsView" class="hidden tableWrap">
+          <table>
+            <thead><tr><th>Order</th><th>Puja</th><th>Name</th><th>Phone</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="bookingsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

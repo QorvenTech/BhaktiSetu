@@ -19,29 +19,41 @@ try {
 }
 
 const pujas = [
-  { id: 'mahakal-abhishek', name: 'Mahakal Abhishek', temple: 'Mahakaleshwar Temple, Ujjain', price: 1499, category: 'Health', tag: 'Most Popular', image: 'https://images.unsplash.com/photo-1621246025224-8b7052f574e8?auto=format&fit=crop&w=1200&q=80', description: 'Sacred Rudrabhishek and Sankalp performed with Panchamrit and Bilva Patra offerings.' },
-  { id: 'kamakhya-devi-puja', name: 'Kamakhya Devi Puja', temple: 'Kamakhya Temple, Guwahati', price: 1899, category: 'Protection', tag: 'Shakti Peeth', image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=80', description: 'Devi archana and sankalp for protection, prosperity, and removal of negative energy.' },
-  { id: 'maha-rudrabhishek', name: 'Maha Rudrabhishek', temple: 'Kedarnath Temple, Uttarakhand', price: 1299, category: 'Peace', tag: 'Jyotirlinga', image: 'https://images.unsplash.com/photo-1626621331169-5f34be280ed9?auto=format&fit=crop&w=1200&q=80', description: 'Vedic Rudra puja with sankalp for peace, health, and spiritual strength.' },
-  { id: 'kaal-sarp-dosh', name: 'Kaal Sarp Dosh Nivaran', temple: 'Trimbakeshwar Temple, Nashik', price: 2199, category: 'Dosha Nivaran', tag: 'Dosh Nivaran', image: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=80', description: 'Special ritual for dosha nivaran, career obstacles, and family peace.' },
+  { id: 'mahakal-abhishek', name: 'Mahakal Abhishek', temple: 'Shri Mahakaleshwar Temple, Ujjain', price: 1101, category: 'shiva', tag: 'Most Popular', image: 'https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=86', description: 'Rudrabhishek sankalp for peace, health, protection, and spiritual strength.' },
+  { id: 'maha-rudrabhishek', name: 'Maha Rudrabhishek', temple: 'Kashi Vishwanath Temple, Varanasi', price: 2501, category: 'shiva', tag: 'Jyotirlinga', image: 'https://images.unsplash.com/photo-1626621331169-5f34be280ed9?auto=format&fit=crop&w=1200&q=86', description: 'Vedic chanting and sacred abhishek with experienced pandit coordination.' },
+  { id: 'kaal-sarp-dosh', name: 'Kaal Sarp Dosh Nivaran', temple: 'Trimbakeshwar Temple, Nashik', price: 2301, category: 'dosha', tag: 'Dosh Nivaran', image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?auto=format&fit=crop&w=1200&q=86', description: 'Special sankalp for obstacles, dosha nivaran, and family peace.' },
+  { id: 'satyanarayan-katha', name: 'Satyanarayan Katha', temple: 'Satyanarayan Temple, Prayagraj', price: 751, category: 'grah', tag: 'Family Puja', image: 'https://images.unsplash.com/photo-1577083753695-e010191bacb5?auto=format&fit=crop&w=1200&q=86', description: 'Auspicious katha and prasad offering for prosperity and gratitude.' },
+  { id: 'grah-shanti-puja', name: 'Grah Shanti Puja', temple: 'Navagraha Shani Temple, Ujjain', price: 1451, category: 'grah', tag: 'Navagraha', image: 'https://images.unsplash.com/photo-1624461084896-cc7d24a163fc?auto=format&fit=crop&w=1200&q=86', description: 'Navagraha shanti sankalp for balance, stability, and smoother life events.' },
+  { id: 'mangal-dosh-puja', name: 'Mangal Dosh Puja', temple: 'Kuja Mangal Temple, Ujjain', price: 1351, category: 'dosha', tag: 'Marriage Support', image: 'https://images.unsplash.com/photo-1618759287629-ca56d8af2d10?auto=format&fit=crop&w=1200&q=86', description: 'Puja support for Mangal dosh, marriage harmony, and family blessings.' },
 ];
 
 let selectedPuja = pujas[0];
+let activeFilter = 'all';
 
 const $ = (id) => document.getElementById(id);
 
-function renderPujas(items = pujas) {
-  $('pujaGrid').innerHTML = items.map((puja) => `
+function getVisiblePujas() {
+  const value = $('search').value.trim().toLowerCase();
+  return pujas.filter((puja) => {
+    const matchesFilter = activeFilter === 'all' || puja.category === activeFilter;
+    const matchesSearch = `${puja.name} ${puja.temple} ${puja.category} ${puja.description}`.toLowerCase().includes(value);
+    return matchesFilter && matchesSearch;
+  });
+}
+
+function renderPujas(items = getVisiblePujas()) {
+  $('pujaGrid').innerHTML = items.length ? items.map((puja) => `
     <article class="card">
       <img src="${puja.image}" alt="${puja.name}">
       <div class="cardBody">
-        <div class="tagRow"><span>${puja.tag}</span><strong>Rs ${puja.price.toLocaleString()}</strong></div>
+        <div class="tagRow"><span>${puja.tag}</span><strong>Rs ${puja.price.toLocaleString('en-IN')}</strong></div>
         <h3>${puja.name}</h3>
         <p class="muted">${puja.temple}</p>
         <p>${puja.description}</p>
-        <button class="cardBtn" data-book="${puja.id}">Book / Enquire</button>
+        <button class="cardBtn" data-book="${puja.id}">Book</button>
       </div>
     </article>
-  `).join('');
+  `).join('') : '<p class="muted">No pujas found. Try another search.</p>';
 
   document.querySelectorAll('[data-book]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -55,7 +67,8 @@ function renderPujas(items = pujas) {
 function updateSelectedPuja() {
   $('selectedPujaTitle').textContent = selectedPuja.name;
   $('selectedPujaTemple').textContent = selectedPuja.temple;
-  $('selectedPujaPrice').textContent = `Rs ${selectedPuja.price.toLocaleString()}`;
+  $('selectedPujaPrice').textContent = `Rs ${selectedPuja.price.toLocaleString('en-IN')}`;
+  $('selectedPujaImage').src = selectedPuja.image;
 }
 
 async function submitBooking(event) {
@@ -102,11 +115,16 @@ async function submitBooking(event) {
   }
 }
 
-$('search').addEventListener('input', (event) => {
-  const value = event.target.value.trim().toLowerCase();
-  renderPujas(pujas.filter((puja) => `${puja.name} ${puja.temple} ${puja.category}`.toLowerCase().includes(value)));
-});
+$('search').addEventListener('input', () => renderPujas());
 $('bookingForm').addEventListener('submit', submitBooking);
+document.querySelectorAll('[data-filter]').forEach((button) => {
+  button.addEventListener('click', () => {
+    activeFilter = button.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach((item) => item.classList.remove('active'));
+    button.classList.add('active');
+    renderPujas();
+  });
+});
 
 renderPujas();
 updateSelectedPuja();

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login or Signup - Pujan Sutra</title>
+  <meta name="description" content="Login or create your Pujan Sutra account to book pujas and view your booking history." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brandMark">ॐ</span><span><strong>Pujan Sutra</strong><small>।। पूजा से सिद्धि तक ।।</small></span></a>
+    <nav><a href="./">Home</a><a href="./bookings.html">My Bookings</a></nav>
+  </header>
+  <main class="authShell">
+    <section class="panel authPanel form">
+      <p class="eyebrow">Account access</p>
+      <h2>Email Login</h2>
+      <div class="authSwitch"><button id="loginTab" class="active" type="button">Login</button><button id="signupTab" type="button">Signup</button></div>
+      <form id="authForm" class="form">
+        <label id="nameLabel" class="hidden">Name<input name="name" placeholder="Your full name" /></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required minlength="6" /></label>
+        <button id="authButton" class="primary wide" type="submit">Login</button>
+        <p id="authMessage" class="message"></p>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="./auth.js"></script>
+</body>
+</html>

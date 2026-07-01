@@ -1,6 +1,13 @@
 const PUJA_ASSETS = [
+  { keys: ['ganesh', 'siddhivinayak'], src: './assets/pujas/ganesha-generated.svg' },
+  { keys: ['ram lalla', 'ram mandir', 'ayodhya'], src: './assets/pujas/05-ram-mandir.svg' },
+  { keys: ['kaal sarp', 'trimbakeshwar'], src: './assets/pujas/04-trimbakeshwar.svg' },
+  { keys: ['navgraha', 'navagraha', 'mangal dosh', 'mangalnath'], src: './assets/pujas/04-trimbakeshwar.svg' },
   { keys: ['kamakhya', 'baglamukhi', 'durga', 'vindhyachal'], src: './assets/pujas/02-kamakhya.svg' },
-  { keys: ['mahakal', 'mahakaleshwar', 'somnath', 'shiva', 'rudra', 'mangal', 'navgraha', 'kaal sarp', 'trimbakeshwar', 'pushkar', 'brahma', 'ganesh', 'hanuman', 'laxmi', 'lakshmi', 'satyanarayan', 'vishnu', 'vaishno', 'ram', 'kashi', 'kedarnath'], src: './assets/pujas/01-mahakal.svg' },
+  { keys: ['kedarnath', 'maha rudra', 'rudrabhishek'], src: './assets/pujas/03-kedarnath.svg' },
+  { keys: ['mahakal', 'mahakaleshwar', 'kashi', 'vishwanath', 'somnath', 'shiva'], src: './assets/pujas/01-mahakal.svg' },
+  { keys: ['hanuman', 'sundarkand'], src: './assets/pujas/ganesha-generated.svg' },
+  { keys: ['laxmi', 'lakshmi', 'satyanarayan', 'vishnu', 'pitru', 'sudarshan', 'pushkar', 'brahma', 'vaishno'], src: './assets/pujas/02-kamakhya.svg' },
 ];
 
 const DEFAULT_APP_IMAGE = './assets/pujas/01-mahakal.svg';
@@ -20,6 +27,10 @@ function applyAppPujaImages() {
     const src = imageForCardText(contextTextForImage(img));
     if (img.dataset.appImageFixed === src && img.getAttribute('src') === src) return;
     img.dataset.appImageFixed = src;
+    img.loading = 'eager';
+    img.decoding = 'async';
+    img.style.objectFit = 'cover';
+    img.style.objectPosition = 'center';
     img.onerror = () => {
       img.onerror = null;
       img.src = DEFAULT_APP_IMAGE;
